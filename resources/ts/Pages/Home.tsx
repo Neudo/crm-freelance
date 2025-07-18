@@ -1,8 +1,13 @@
-import React from "react";
+import React, { ReactElement } from "react";
 import Layout from "../Layouts/Layout";
 import { Link } from "@inertiajs/react";
+import { PageComponent } from "../types";
 
-function Home({ name }) {
+interface HomeProps {
+    name: string;
+}
+
+function Home({ name }: HomeProps): ReactElement {
     return (
         <>
             <h1 className="text-3xl font-bold">Home page {name}</h1>
@@ -17,6 +22,6 @@ function Home({ name }) {
     );
 }
 
-Home.layout = (page) => <Layout children={page} />;
+(Home as PageComponent).layout = (page: ReactElement) => <Layout children={page} />;
 
 export default Home;

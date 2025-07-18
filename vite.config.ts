@@ -7,14 +7,14 @@ export default defineConfig({
     plugins: [
         tailwindcss(),
         laravel({
-            input: "resources/js/app.jsx",
+            input: "resources/ts/app.tsx",
             refresh: true,
         }),
         react(),
     ],
     resolve: {
         alias: {
-            "@": "/resources/js",
+            "@": "/resources/ts",
         },
     },
 });
