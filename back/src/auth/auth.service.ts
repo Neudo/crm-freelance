@@ -9,8 +9,8 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async validateUser(username: string, password: string): Promise<any> {
-    const user = await this.usersService.findOne(username);
+  async validateUser(email: string, password: string): Promise<any> {
+    const user = await this.usersService.findOne(email);
     if (user && user.password === password) {
       const { password, ...result } = user;
       return result;
@@ -19,27 +19,27 @@ export class AuthService {
   }
 
   async login(user: any) {
-    const payload = { username: user.username, sub: user.userId };
+    const payload = { email: user.email, sub: user.id };
     return {
       access_token: this.jwtService.sign(payload),
     };
   }
 
-  async register(username: string, password: string) {
+  async register(email: string, password: string) {
     // Check if user already exists
-    const existingUser = await this.usersService.findOne(username);
+    const existingUser = await this.usersService.findOne(email);
     if (existingUser) {
       throw new Error('User already exists');
     }
 
     // Create new user (this would typically involve saving to database)
-    const newUser = await this.usersService.create(username, password);
+    const newUser = await this.usersService.create(email, password);
     
     // Generate token for the new user
-    const payload = { username: newUser.username, sub: newUser.userId };
+    const payload = { email: newUser.email, sub: newUser.id };
     return {
       access_token: this.jwtService.sign(payload),
-      user: { username: newUser.username, userId: newUser.userId },
+      user: { email: newUser.email, id: newUser.id },
     };
   }
 }
