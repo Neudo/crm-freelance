@@ -1,4 +1,3 @@
-import Logo from "@/assets/images/logo512.png";
 import { Button } from "@/components/ui/button";
 import {
   NavigationMenu,
