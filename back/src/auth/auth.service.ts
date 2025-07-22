@@ -24,4 +24,22 @@ export class AuthService {
       access_token: this.jwtService.sign(payload),
     };
   }
+
+  async register(username: string, password: string) {
+    // Check if user already exists
+    const existingUser = await this.usersService.findOne(username);
+    if (existingUser) {
+      throw new Error('User already exists');
+    }
+
+    // Create new user (this would typically involve saving to database)
+    const newUser = await this.usersService.create(username, password);
+    
+    // Generate token for the new user
+    const payload = { username: newUser.username, sub: newUser.userId };
+    return {
+      access_token: this.jwtService.sign(payload),
+      user: { username: newUser.username, userId: newUser.userId },
+    };
+  }
 }
