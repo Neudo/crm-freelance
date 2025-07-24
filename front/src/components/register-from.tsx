@@ -28,6 +28,10 @@ export default function RegisterForm() {
                   placeholder="me@example.com"
                   required
                 />
+
+                <Label htmlFor="name">Name</Label>
+                <Input id="name" type="text" placeholder="John Doe" required />
+
                 <Label htmlFor="password">Password</Label>
                 <Input
                   id="password"
@@ -35,6 +39,7 @@ export default function RegisterForm() {
                   placeholder="*********"
                   required
                 />
+
                 <Label htmlFor="passwordConfirm">Confirm Password</Label>
                 <Input
                   id="passwordConfirm"
@@ -42,6 +47,7 @@ export default function RegisterForm() {
                   placeholder="*********"
                   required
                 />
+
                 <Button type="submit" className="w-full">
                   Register
                 </Button>
