@@ -34,7 +34,7 @@ export class AuthService {
 
     // Create new user (this would typically involve saving to database)
     const newUser = await this.usersService.create(email, password);
-    
+
     // Generate token for the new user
     const payload = { email: newUser.email, sub: newUser.id };
     return {
