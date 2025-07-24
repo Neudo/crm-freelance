@@ -1,38 +1,20 @@
-import { Controller, Request, Post, UseGuards, Get } from '@nestjs/common';
-import { AuthService } from './auth/auth.service';
-import { JwtAuthGuard } from './auth/jwt.guard';
-import { LocalAuthGuard } from './auth/local-auth.guard';
-import { Body } from '@nestjs/common';
+import { Controller, Get, Post, Body } from '@nestjs/common';
+import { UsersService } from './user.service';
+import { User as UserModel } from '@prisma/client';
 
 @Controller()
 export class AppController {
-  constructor(private authService: AuthService) {}
+  constructor(private readonly userService: UsersService) {}
 
-  @UseGuards(LocalAuthGuard)
-  @Post('auth/login')
-  async login(@Request() req) {
-    return this.authService.login(req.user);
+  @Get('/')
+  getHello(): string {
+    return 'Hello World!';
   }
 
-  @Post('auth/register')
+  @Post('auth/signup')
   async signupUser(
-    @Body() userData: { email: string; password: string },
-  ): Promise<any> {
-    return this.authService.register(userData.email, userData.password)
-  }
-
-  @UseGuards(JwtAuthGuard)
-  @Post('auth/logout')
-  async logout(@Request() req) {
-    return {
-      message: 'Logged out successfully',
-      user: req.user.email,
-    };
-  }
-
-  @UseGuards(JwtAuthGuard)
-  @Get('profile')
-  getProfile(@Request() req) {
-    return req.user;
+    @Body() userData: { name: string; email: string; password: string },
+  ): Promise<UserModel> {
+    return this.userService.createUser(userData);
   }
 }
