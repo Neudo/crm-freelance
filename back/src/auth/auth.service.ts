@@ -8,11 +8,13 @@ export class AuthService {
   constructor(private usersService: UsersService) {}
 
   async validateUser(
-    username: string,
+    name: string,
     pass: string,
   ): Promise<Omit<User, 'password'> | null> {
+    console.log('Here --->', name, pass);
+
     const user = await this.usersService.user({
-      email: username,
+      email: name,
     });
     if (user && user.password) {
       const isMatch = await bcrypt.compare(pass, user.password);
