@@ -11,12 +11,15 @@ import { Label } from "@/components/ui/label";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 const registerSchema = z
   .object({
     email: z.string().email(),
     name: z.string().min(1, { message: "Name is required" }),
-    password: z.string().min(8, { message: "Password must be at least 8 characters" }),
+    password: z
+      .string()
+      .min(8, { message: "Password must be at least 8 characters" }),
     passwordConfirm: z.string().min(8),
   })
   .refine((data) => data.password === data.passwordConfirm, {
@@ -37,15 +40,40 @@ export default function RegisterForm() {
     },
   });
 
+  const queryClient = useQueryClient();
+
+  const mutation = useMutation({
+    mutationFn: async (values: RegisterValues) => {
+      // Exclude passwordConfirm from the request body
+      const { passwordConfirm, ...requestData } = values;
+      
+      const response = await fetch("http://localhost:4000/auth/signup", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(requestData),
+      });
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.setQueryData(["user"], null);
+    },
+  });
+
   function onSubmit(values: RegisterValues) {
     console.log(values);
+    mutation.mutate(values);
   }
   return (
     <div className="flex min-h-svh w-full items-center justify-center p-6 md:p-10">
       <Card className="md:min-w-[400px]">
         <CardHeader>
           <CardTitle>Register</CardTitle>
-          <CardDescription>Register to your Acme Inc account</CardDescription>
+          <CardDescription>Register to your CRM FREE account</CardDescription>
         </CardHeader>
         <CardContent className=" p-0">
           <form onSubmit={form.handleSubmit(onSubmit)} className="p-6 md:p-8">
